@@ -1,0 +1,41 @@
+services:
+  api_service:
+    build: .
+    restart: always
+    ports:
+      - "8080:8080"
+    networks:
+      - employeemysql-net
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysqldb:3306/employee_directory?allowPublicKeyRetrieval=true&useSSL=false
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root1234
+    depends_on:
+      mysqldb:
+        condition: service_healthy
+    volumes:
+      - .m2:/root/.m2
+
+  mysqldb:
+    image: "mysql:latest"
+    restart: always
+    ports:
+      - "3306:3306"
+    networks:
+      - employeemysql-net
+    environment:
+      MYSQL_DATABASE: employee_directory
+      MYSQL_ROOT_PASSWORD: root1234
+    volumes:
+      - ./schema.sql:/docker-entrypoint-initdb.d/1-schema.sql
+      - ./data.sql:/docker-entrypoint-initdb.d/2-data.sql
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+networks:
+  employeemysql-net:
+    driver: bridge

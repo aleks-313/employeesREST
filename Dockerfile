@@ -1,4 +1,8 @@
-FROM openjdk:17
+FROM maven:3.8.3-openjdk-17 AS build
 LABEL authors="Aleks"
-ADD target/employees_rest-1.0.jar employees_rest-1.0.jar
-ENTRYPOINT ["java", "-jar", "/employees_rest-1.0.jar"]
+WORKDIR /home/app
+COPY src ./src
+COPY pom.xml .
+RUN mvn clean package -DskipTests
+EXPOSE 8080
+ENTRYPOINT ["java", "-jar", "/home/app/target/employeesREST.jar"]

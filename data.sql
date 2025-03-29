@@ -1,0 +1,1 @@
+INSERT INTO `employee` VALUES (1,'Johnny','Brown','jbrown@test.com'),(2,'Emma','Lucas','emma@test.com'),(3,'Pile','Oriz','pile@s.oriz'),(4,'Genie','InABottle','genie@test.com'),(5,'Goku','Kakarot','goku@test.com');
